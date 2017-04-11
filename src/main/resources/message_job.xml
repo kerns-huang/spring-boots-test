@@ -1,0 +1,38 @@
+<beans:bean id="messageReader"
+            class="org.springframework.batch.item.file.FlatFileItemReader"
+            xmlns:beans="http://www.springframework.org/schema/beans">
+    <beans:property name="lineMapper" ref="lineMapper">
+    </beans:property>
+    <beans:property name="resource"
+                    value="classpath:/users.txt"></beans:property>
+</beans:bean>
+<beans:bean id="lineMapper"
+            class="org.springframework.batch.item.file.mapping.DefaultLineMapper"
+            xmlns:beans="http://www.springframework.org/schema/beans">
+<beans:property name="lineTokenizer">
+    <beans:bean
+            class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+    </beans:bean>
+</beans:property>
+<beans:property name="fieldSetMapper">
+    <beans:bean class="org.springframework.batch.sample.UserMapper">
+    </beans:bean>
+</beans:property>
+</beans:bean>
+<beans:bean id="jobRepository"
+            class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
+<beans:property name="transactionManager" ref="transactionManager" />
+</beans:bean>
+
+<beans:bean id="transactionManager"
+            class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
+<job id="messageJob">
+<step id="messageStep">
+    <tasklet>
+        <chunk reader="messageReader" processor="messageProcessor"
+               writer="messageWriter" commit-interval="5"
+               chunk-completion-policy="">
+        </chunk>
+    </tasklet>
+</step>
+</job>
