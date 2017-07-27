@@ -25,6 +25,7 @@ import static springfox.documentation.builders.PathSelectors.regex;
 @ComponentScan(basePackages = {
         "com.mongodb"
 })
+
 public class MongodbApplication {
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(MongodbApplication.class, args);
